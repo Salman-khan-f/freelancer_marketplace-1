@@ -1,15 +1,35 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { taskApi } from '../../api/taskApi'
 
 export default function CompanyTaskCreatePage() {
+  const navigate = useNavigate()
   const [title, setTitle] = useState('')
-  const [budget, setBudget] = useState('')
+  const [budgetMin, setBudgetMin] = useState('')
+  const [budgetMax, setBudgetMax] = useState('')
   const [description, setDescription] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    // Hook up to taskApi.createTask when backend is wired
-    console.log({ title, budget, description })
+    setSubmitting(true)
+    setError(null)
+
+    try {
+      await taskApi.createTask({
+        title,
+        description,
+        budgetMin: Number(budgetMin),
+        budgetMax: Number(budgetMax),
+      })
+      navigate('/company')
+    } catch (err) {
+      console.error(err)
+      setError('Failed to create task. Please try again.')
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -28,15 +48,27 @@ export default function CompanyTaskCreatePage() {
             required
           />
         </div>
-        <div className="form-field">
-          <label htmlFor="budget">Budget</label>
-          <input
-            id="budget"
-            type="number"
-            value={budget}
-            onChange={(e) => setBudget(e.target.value)}
-            required
-          />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="form-field">
+            <label htmlFor="budgetMin">Minimum budget ($)</label>
+            <input
+              id="budgetMin"
+              type="number"
+              value={budgetMin}
+              onChange={(e) => setBudgetMin(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="budgetMax">Maximum budget ($)</label>
+            <input
+              id="budgetMax"
+              type="number"
+              value={budgetMax}
+              onChange={(e) => setBudgetMax(e.target.value)}
+              required
+            />
+          </div>
         </div>
         <div className="form-field">
           <label htmlFor="description">Description</label>
@@ -49,8 +81,9 @@ export default function CompanyTaskCreatePage() {
             required
           />
         </div>
-        <button type="submit" className="primary-button">
-          Save task
+        {error && <p className="form-error">{error}</p>}
+        <button type="submit" className="primary-button" disabled={submitting}>
+          {submitting ? 'Saving...' : 'Save task'}
         </button>
       </form>
     </section>

@@ -21,19 +21,33 @@ interface AuthResponse {
 
 export const authApi = {
   async login(payload: LoginRequest): Promise<AuthResponse> {
-    const { data } = await axiosClient.post<AuthResponse>(
-      '/auth/login',
-      payload,
-    )
-    return data
+    const { data } = await axiosClient.post<any>('/auth/login', payload)
+    // Map backend JwtResponse to AuthResponse
+    return {
+      accessToken: data.token,
+      refreshToken: '', // Backend doesn't provide refresh token yet
+      user: {
+        id: data.id,
+        name: data.fullName,
+        email: data.email,
+        role: data.role.toLowerCase() as any,
+      },
+    }
   },
 
   async register(payload: RegisterRequest): Promise<AuthResponse> {
-    const { data } = await axiosClient.post<AuthResponse>(
-      '/auth/register',
-      payload,
-    )
-    return data
+    const { data } = await axiosClient.post<any>('/auth/register', payload)
+    // Map backend JwtResponse to AuthResponse
+    return {
+      accessToken: data.token,
+      refreshToken: '',
+      user: {
+        id: data.id,
+        name: data.fullName,
+        email: data.email,
+        role: data.role.toLowerCase() as any,
+      },
+    }
   },
 }
 

@@ -56,11 +56,11 @@ export default function LoginPage() {
       </div>
       {error && <p className="form-error">{error}</p>}
       <button type="submit" className="primary-button" disabled={submitting}>
-        {submitting ? 'Logging in...' : 'Login'}
+        {submitting ? 'Logging in...' : 'Login to Account'}
       </button>
-      <p className="auth-footer">
-        Don&apos;t have an account? <Link to="/register">Register</Link>
-      </p>
+      <div className="auth-footer">
+        Don&apos;t have an account? <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>Create one</Link>
+      </div>
     </form>
   )
 }

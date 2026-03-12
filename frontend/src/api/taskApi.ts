@@ -4,8 +4,10 @@ export interface Task {
   id: string
   title: string
   description: string
-  budget: number
+  budgetMin: number
+  budgetMax: number
   status: string
+  freelancer?: any
 }
 
 export const taskApi = {
@@ -26,10 +28,16 @@ export const taskApi = {
     return data
   },
 
+  async getTaskById(taskId: string) {
+    const { data } = await axiosClient.get<Task>(`/tasks/${taskId}`)
+    return data
+  },
+
   async createTask(payload: {
     title: string
     description: string
-    budget: number
+    budgetMin: number
+    budgetMax: number
   }) {
     const { data } = await axiosClient.post<Task>('/tasks', payload)
     return data

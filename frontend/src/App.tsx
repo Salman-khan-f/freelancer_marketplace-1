@@ -11,13 +11,13 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ChatProvider>
-          <BrowserRouter>
+      <BrowserRouter>
+        <AuthProvider>
+          <ChatProvider>
             <AppRoutes />
-          </BrowserRouter>
-        </ChatProvider>
-      </AuthProvider>
+          </ChatProvider>
+        </AuthProvider>
+      </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )

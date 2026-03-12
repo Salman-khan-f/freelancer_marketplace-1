@@ -1,6 +1,7 @@
 package com.freelance.marketplace.controller;
 
 import com.freelance.marketplace.entity.User;
+import com.freelance.marketplace.entity.UserRole;
 import com.freelance.marketplace.payload.request.LoginRequest;
 import com.freelance.marketplace.payload.request.SignupRequest;
 import com.freelance.marketplace.payload.response.JwtResponse;
@@ -66,14 +67,30 @@ public class AuthController {
 
         User user = new User();
         user.setEmail(signUpRequest.getEmail());
-        user.setFullName(signUpRequest.getFullName());
+        user.setFullName(signUpRequest.getName());
         user.setPasswordHash(encoder.encode(signUpRequest.getPassword()));
-        user.setRole(signUpRequest.getRole());
+        
+        try {
+            user.setRole(UserRole.valueOf(signUpRequest.getRole().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Error: Invalid role!");
+            return ResponseEntity.badRequest().body(response);
+        }
 
-        userRepository.save(user);
+        user = userRepository.save(user);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "User registered successfully!");
-        return ResponseEntity.ok(response);
+        // Automatically log in the user after registration
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(signUpRequest.getEmail(), signUpRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                user.getId(),
+                user.getEmail(),
+                user.getFullName(),
+                user.getRole().name()));
     }
 }

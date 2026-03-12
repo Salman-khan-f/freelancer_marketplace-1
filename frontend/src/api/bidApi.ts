@@ -3,12 +3,21 @@ import { axiosClient } from './axiosClient'
 export interface Bid {
   id: string
   amount: number
+  proposal: string
   status: string
+  freelancer: {
+    id: string
+    fullName?: string
+  }
+  task: {
+    id: string
+    title: string
+  }
   createdAt?: string
 }
 
 export const bidApi = {
-  async placeBid(taskId: string, payload: { amount: number }) {
+  async placeBid(taskId: string, payload: { amount: number; proposal: string }) {
     const { data } = await axiosClient.post<Bid>(`/tasks/${taskId}/bids`, payload)
     return data
   },

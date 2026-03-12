@@ -73,11 +73,11 @@ export default function RegisterPage() {
       </div>
       {error && <p className="form-error">{error}</p>}
       <button type="submit" className="primary-button" disabled={submitting}>
-        {submitting ? 'Registering...' : 'Register'}
+        {submitting ? 'Creating account...' : 'Create Account'}
       </button>
-      <p className="auth-footer">
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+      <div className="auth-footer">
+        Already have an account? <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>Login here</Link>
+      </div>
     </form>
   )
 }

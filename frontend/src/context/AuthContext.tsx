@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authApi } from '../api/authApi'
+import { authStorageKeys } from '../constants/auth'
 
 type Role = 'admin' | 'company' | 'freelancer'
 
@@ -28,10 +29,6 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
-const ACCESS_TOKEN_KEY = 'accessToken'
-const REFRESH_TOKEN_KEY = 'refreshToken'
-const AUTH_USER_KEY = 'authUser'
-
 interface AuthProviderProps {
   children: ReactNode
 }
@@ -42,15 +39,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const navigate = useNavigate()
 
   const bootstrapFromStorage = useCallback(() => {
-    const token = window.localStorage.getItem(ACCESS_TOKEN_KEY)
-    const storedUser = window.localStorage.getItem(AUTH_USER_KEY)
+    const token = window.localStorage.getItem(authStorageKeys.accessToken)
+    const storedUser = window.localStorage.getItem(authStorageKeys.authUser)
 
     if (token && storedUser) {
       try {
         const parsedUser: AuthUser = JSON.parse(storedUser)
         setUser(parsedUser)
       } catch {
-        window.localStorage.removeItem(AUTH_USER_KEY)
+        window.localStorage.removeItem(authStorageKeys.authUser)
       }
     }
 
@@ -66,18 +63,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     refreshToken?: string
     user: AuthUser
   }) => {
-    window.localStorage.setItem(ACCESS_TOKEN_KEY, params.accessToken)
+    window.localStorage.setItem(authStorageKeys.accessToken, params.accessToken)
     if (params.refreshToken) {
-      window.localStorage.setItem(REFRESH_TOKEN_KEY, params.refreshToken)
+      window.localStorage.setItem(authStorageKeys.refreshToken, params.refreshToken)
     }
-    window.localStorage.setItem(AUTH_USER_KEY, JSON.stringify(params.user))
+    window.localStorage.setItem(authStorageKeys.authUser, JSON.stringify(params.user))
     setUser(params.user)
   }
 
   const clearSession = () => {
-    window.localStorage.removeItem(ACCESS_TOKEN_KEY)
-    window.localStorage.removeItem(REFRESH_TOKEN_KEY)
-    window.localStorage.removeItem(AUTH_USER_KEY)
+    window.localStorage.removeItem(authStorageKeys.accessToken)
+    window.localStorage.removeItem(authStorageKeys.refreshToken)
+    window.localStorage.removeItem(authStorageKeys.authUser)
     setUser(null)
   }
 
@@ -143,11 +140,5 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider')
   }
   return ctx
-}
-
-export const authStorageKeys = {
-  accessToken: ACCESS_TOKEN_KEY,
-  refreshToken: REFRESH_TOKEN_KEY,
-  authUser: AUTH_USER_KEY,
 }
 
