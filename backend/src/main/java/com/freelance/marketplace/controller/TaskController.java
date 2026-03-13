@@ -1,8 +1,8 @@
 package com.freelance.marketplace.controller;
 
 import com.freelance.marketplace.entity.Task;
-import com.freelance.marketplace.security.UserDetailsImpl;
 import com.freelance.marketplace.service.TaskService;
+import com.freelance.marketplace.service.UserDetailsImpl;
 import com.freelance.marketplace.entity.User;
 import com.freelance.marketplace.repository.UserRepository;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.freelance.marketplace.security;
+package com.freelance.marketplace.service;
 
 import com.freelance.marketplace.entity.User;
 import com.freelance.marketplace.repository.UserRepository;

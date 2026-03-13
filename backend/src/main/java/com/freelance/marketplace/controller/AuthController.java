@@ -7,7 +7,8 @@ import com.freelance.marketplace.payload.request.SignupRequest;
 import com.freelance.marketplace.payload.response.JwtResponse;
 import com.freelance.marketplace.repository.UserRepository;
 import com.freelance.marketplace.security.JwtTokenProvider;
-import com.freelance.marketplace.security.UserDetailsImpl;
+import com.freelance.marketplace.service.UserDetailsImpl;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

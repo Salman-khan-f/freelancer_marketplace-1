@@ -6,8 +6,9 @@ import com.freelance.marketplace.entity.TaskStatus;
 import com.freelance.marketplace.entity.User;
 import com.freelance.marketplace.repository.ReviewRepository;
 import com.freelance.marketplace.repository.UserRepository;
-import com.freelance.marketplace.security.UserDetailsImpl;
 import com.freelance.marketplace.service.TaskService;
+import com.freelance.marketplace.service.UserDetailsImpl;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
